@@ -2,29 +2,17 @@ extern crate hyper;
 extern crate spellbook;
 #[macro_use] extern crate tera;
 
+use spellbook::prelude::*;
 use std::rc::Rc;
-
-use spellbook::{
-    Request,
-    Response,
-    Result,
-    Router,
-    Spellbook
-};
-
-use tera::{
-    Tera,
-    Context,
-};
 
 #[derive(Clone)]
 struct Syndicate {
-    tera: Rc<Tera>,
+    tera: Rc<tera::Tera>,
 }
 
-fn index(app: Rc<Syndicate>, _req: Rc<Request>) -> Result {
-    let context = Context::new();
-    let body = try!(app.tera.render("index.html", &context));
+fn index(context: Rc<Context<Syndicate>>) -> Result {
+    let tera_context = tera::Context::new();
+    let body = try!(context.app.tera.render("index.html", &tera_context));
 
     Ok(Response::new()
         .with_header(hyper::header::ContentLength(body.len() as u64))
