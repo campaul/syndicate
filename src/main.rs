@@ -10,7 +10,7 @@ struct Syndicate {
     tera: Rc<tera::Tera>,
 }
 
-fn index(context: Rc<Context<Syndicate>>) -> Result {
+fn index(context: Context<Syndicate>) -> Result {
     let tera_context = tera::Context::new();
     let body = try!(context.app.tera.render("index.html", &tera_context));
 
