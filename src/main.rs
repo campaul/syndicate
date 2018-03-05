@@ -6,13 +6,13 @@ use spellbook::prelude::*;
 use std::rc::Rc;
 
 #[derive(Clone)]
-struct Syndicate {
+struct State {
     tera: Rc<tera::Tera>,
 }
 
-fn index(context: Context<Syndicate>) -> Result {
+fn index(context: Context<State>) -> Result {
     let tera_context = tera::Context::new();
-    let body = try!(context.app.tera.render("index.html", &tera_context));
+    let body = try!(context.state.tera.render("index.html", &tera_context));
 
     Ok(Response::new()
         .with_header(hyper::header::ContentLength(body.len() as u64))
@@ -20,12 +20,12 @@ fn index(context: Context<Syndicate>) -> Result {
 }
 
 fn main() {
-    let app = Syndicate {
+    let state = State {
         tera: Rc::new(compile_templates!("templates/**/*")),
     };
 
     let router = Router::new()
         .get("/", index);
 
-    Spellbook::new(app, router).serve("127.0.0.1:3000");
+    Spellbook::new(state, router).serve("127.0.0.1:3000");
 }
