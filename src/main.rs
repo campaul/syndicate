@@ -14,9 +14,7 @@ fn index(context: Context<State>) -> Result {
     let tera_context = tera::Context::new();
     let body = try!(context.state.tera.render("index.html", &tera_context));
 
-    Ok(Response::new()
-        .with_header(hyper::header::ContentLength(body.len() as u64))
-        .with_body(body))
+    Ok(Response::new().with_body(body))
 }
 
 fn main() {
